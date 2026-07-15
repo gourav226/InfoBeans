@@ -113,46 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ==========================================================================
-       STATS COUNTER ANIMATION
-       ========================================================================== */
-    const statsNumbers = document.querySelectorAll('.stat-number');
-    
-    const animateCounter = (element) => {
-        const target = parseInt(element.getAttribute('data-target'), 10);
-        let count = 0;
-        const duration = 2000;
-        const stepTime = Math.max(Math.floor(duration / target), 15);
-        
-        const counterInterval = setInterval(() => {
-            count += Math.ceil(target / 100);
-            if (count >= target) {
-                element.textContent = target + (target === 98 ? '%' : '+');
-                clearInterval(counterInterval);
-            } else {
-                element.textContent = count + (target === 98 ? '%' : '+');
-            }
-        }, stepTime);
-    };
-
-    const observerOptions = {
-        threshold: 0.5
-    };
-
-    const statsObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                statsNumbers.forEach(num => animateCounter(num));
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    const statsSection = document.querySelector('.hero-stats');
-    if (statsSection) {
-        statsObserver.observe(statsSection);
-    }
-
-    /* ==========================================================================
        PORTFOLIO GRID FILTERING
        ========================================================================== */
     const filterButtons = document.querySelectorAll('.filter-btn');

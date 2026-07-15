@@ -569,34 +569,6 @@ body {
     margin-bottom: 4rem;
 }
 
-.hero-stats {
-    display: flex;
-    gap: 3.5rem;
-    border-top: 1px solid var(--border-color);
-    padding-top: 2rem;
-    width: 100%;
-}
-
-.stat-item {
-    display: flex;
-    flex-direction: column;
-}
-
-.stat-number {
-    font-family: var(--font-heading);
-    font-size: 2.25rem;
-    font-weight: 600;
-    color: var(--primary);
-}
-
-.stat-label {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 0.25rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
 /* Hero Right Visual Column */
 .hero-visual {
     position: relative;
@@ -2709,10 +2681,6 @@ body {
         justify-content: center;
     }
     
-    .hero-stats {
-        justify-content: center;
-    }
-    
     .hero-visual {
         height: 350px;
     }
@@ -2752,14 +2720,6 @@ body {
     
     .hero-title {
         font-size: 2.75rem;
-    }
-    
-    .hero-stats {
-        gap: 2rem;
-    }
-    
-    .stat-number {
-        font-size: 1.8rem;
     }
     
     .section-title {
