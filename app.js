@@ -9,20 +9,45 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================================== */
     const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8888' : '';
 
-    async function submitLead(payload) {
+    async function submitLead(payload, retries = 1) {
         const url = `${BACKEND_URL}/api/leads`;
         console.log('[API] Submitting lead to:', url, payload);
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        console.log('[API] Response:', res.status, data);
-        if (!res.ok) {
-            throw new Error(data.message || `Server error (${res.status})`);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                signal: controller.signal
+            });
+            clearTimeout(timeout);
+            let data;
+            const ct = res.headers.get('content-type') || '';
+            if (ct.includes('application/json')) {
+                data = await res.json();
+            } else {
+                const text = await res.text();
+                console.error('[API] Non-JSON response:', res.status, text.slice(0, 300));
+                throw new Error(`Server returned ${res.status} ${res.statusText}. Please try again.`);
+            }
+            console.log('[API] Response:', res.status, data);
+            if (!res.ok) {
+                throw new Error(data.message || `Server error (${res.status})`);
+            }
+            return data;
+        } catch (err) {
+            clearTimeout(timeout);
+            if (err.name === 'AbortError') {
+                throw new Error('Request timed out. Please check your connection and try again.');
+            }
+            if (retries > 0 && (err.message === 'Failed to fetch' || err.name === 'TypeError')) {
+                console.log('[API] Retrying... attempts left:', retries);
+                await new Promise(r => setTimeout(r, 1500));
+                return submitLead(payload, retries - 1);
+            }
+            throw err;
         }
-        return data;
     }
 
     /* ==========================================================================
