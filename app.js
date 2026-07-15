@@ -5,6 +5,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
+       BACKEND API CONFIGURATION
+       ========================================================================== */
+    const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8888' : '';
+
+    async function submitLead(payload) {
+        const url = `${BACKEND_URL}/api/leads`;
+        console.log('[API] Submitting lead to:', url, payload);
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        console.log('[API] Response:', res.status, data);
+        if (!res.ok) {
+            throw new Error(data.message || `Server error (${res.status})`);
+        }
+        return data;
+    }
+
+    /* ==========================================================================
        MOBILE NAVIGATION OVERLAY
        ========================================================================== */
     const mobileToggle = document.querySelector('.mobile-toggle');
@@ -458,6 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
             inquiryLoading.style.display = 'flex';
 
             const payload = {
+                type: 'project_inquiry',
                 name,
                 email,
                 phone,
@@ -471,41 +493,96 @@ document.addEventListener('DOMContentLoaded', () => {
                 estimatedCost: {
                     min: calculatedMinPrice,
                     max: calculatedMaxPrice
-                }
+                },
+                source: window.location.pathname
             };
 
             try {
-                const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:8888'
-                    : '';
-
-                const response = await fetch(`${API_BASE}/api/projects`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-
+                const result = await submitLead(payload);
                 inquiryLoading.style.display = 'none';
-
                 if (result.success) {
                     inquirySuccess.style.display = 'flex';
                     if (typeof lucide !== 'undefined') lucide.createIcons();
                 } else {
                     inquiryForm.style.display = 'block';
-                    alert(result.message || 'Something went wrong. Please try again.');
+                    alert(result.message || 'Submission failed. Please try again.');
                 }
             } catch (err) {
+                console.error('[Inquiry Form] Error:', err);
                 inquiryLoading.style.display = 'none';
                 inquiryForm.style.display = 'block';
-                alert('Unable to connect to the server. Please try again later.');
+                alert(err.message || 'Unable to connect. Please check your internet and try again.');
             }
         });
     }
 
     if (inquirySuccessBtn) {
         inquirySuccessBtn.addEventListener('click', closeInquiryModal);
+    }
+
+    /* ==========================================================================
+       CONTACT FORM HANDLER
+       ========================================================================== */
+    const contactForm = document.getElementById('contact-form');
+    const contactSubmitBtn = document.getElementById('contact-submit-btn');
+    const contactSuccess = document.getElementById('contact-success');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const phone = document.getElementById('contact-phone').value.trim();
+            const subject = document.getElementById('contact-subject').value;
+            const message = document.getElementById('contact-message').value.trim();
+
+            if (!name || !email || !subject || !message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            contactSubmitBtn.disabled = true;
+            contactSubmitBtn.innerHTML = '<i data-lucide="loader" class="icon-right animate-spin"></i> Sending...';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            try {
+                const result = await submitLead({
+                    type: 'contact',
+                    name,
+                    email,
+                    phone,
+                    subject,
+                    message,
+                    source: window.location.pathname
+                });
+
+                if (result.success) {
+                    contactForm.querySelector('.contact-form-grid').style.display = 'none';
+                    contactForm.querySelector('.full-width').style.display = 'none';
+                    contactForm.querySelector('.contact-form-actions').style.display = 'none';
+                    contactSuccess.style.display = 'flex';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                } else {
+                    alert(result.message || 'Submission failed. Please try again.');
+                    contactSubmitBtn.disabled = false;
+                    contactSubmitBtn.innerHTML = '<i data-lucide="send" class="icon-left"></i> Send Message';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                }
+            } catch (err) {
+                console.error('[Contact Form] Error:', err);
+                alert(err.message || 'Unable to connect. Please check your internet and try again.');
+                contactSubmitBtn.disabled = false;
+                contactSubmitBtn.innerHTML = '<i data-lucide="send" class="icon-left"></i> Send Message';
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        });
     }
 
     /* ==========================================================================
@@ -590,53 +667,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeAppAlertBtn = document.getElementById('close-app-alert-btn');
 
     if (jobAppForm) {
-        jobAppForm.addEventListener('submit', (e) => {
+        jobAppForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submit-application-btn');
             const originalContent = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i data-lucide="loader" class="icon-right animate-spin"></i> Submitting CV...';
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
+            submitBtn.innerHTML = '<i data-lucide="loader" class="icon-right animate-spin"></i> Submitting Application...';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
 
             const applicantName = document.getElementById('candidate-name').value;
             const applicantEmail = document.getElementById('candidate-email').value;
             const applicantRole = document.getElementById('candidate-role').value;
-            const applicantNote = document.getElementById('candidate-note').value || 'None';
+            const applicantNote = document.getElementById('candidate-note').value || '';
 
-            setTimeout(() => {
-                const applications = JSON.parse(localStorage.getItem('infobeans_applications') || '[]');
-                const newApplication = {
-                    date: new Date().toLocaleDateString('en-IN'),
+            try {
+                const result = await submitLead({
+                    type: 'job_application',
                     name: applicantName,
                     email: applicantEmail,
+                    phone: '',
                     role: applicantRole,
-                    resume_name: uploadedFileName || 'resume.pdf',
-                    resume_size: uploadedFileSize || 'N/A',
-                    resume_data: uploadedFileBase64 || '', // stores base64 for admin downloads
-                    note: applicantNote
-                };
-                applications.push(newApplication);
-                localStorage.setItem('infobeans_applications', JSON.stringify(applications));
-
-                appSuccessOverlay.classList.add('open');
+                    note: applicantNote,
+                    resumeName: uploadedFileName || '',
+                    resumeSize: uploadedFileSize || '',
+                    resumeData: uploadedFileBase64 || '',
+                    source: window.location.pathname
+                });
 
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalContent;
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+
+                if (result.success) {
+                    appSuccessOverlay.classList.add('open');
+                    jobAppForm.reset();
+                    uploadStatusText.textContent = 'Click or drag resume file here';
+                    selectedFileName.textContent = 'No file selected';
+                    uploadedFileBase64 = '';
+                    uploadedFileName = '';
+                    uploadedFileSize = '';
+                } else {
+                    alert(result.message || 'Submission failed. Please try again.');
                 }
-                jobAppForm.reset();
-                
-                // Clear upload area label
-                uploadStatusText.textContent = 'Click or drag resume file here';
-                selectedFileName.textContent = 'No file selected';
-                uploadedFileBase64 = '';
-                uploadedFileName = '';
-                uploadedFileSize = '';
-            }, 1500);
+            } catch (err) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                alert('Unable to connect. Please try again later.');
+            }
         });
     }
 

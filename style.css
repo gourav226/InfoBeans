@@ -3418,6 +3418,272 @@ body {
     border-color: #c9a84c;
 }
 
+/* Admin Type Badges */
+.admin-db-type-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.type-project_inquiry { background: rgba(58, 142, 246, 0.12); color: #3a8ef6; }
+.type-job_application { background: rgba(46, 204, 113, 0.12); color: #2ecc71; }
+.type-contact { background: rgba(155, 89, 182, 0.12); color: #9b59b6; }
+.type-quote_request { background: rgba(243, 156, 18, 0.12); color: #f39c12; }
+
+/* Status Archived */
+.status-archived { background: rgba(74, 96, 128, 0.15); color: #4a6080; }
+
+/* Admin Header Right */
+.admin-db-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.admin-db-last-update {
+    font-size: 11px;
+    color: #4a6080;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.admin-db-header-btn {
+    width: 32px;
+    height: 32px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 6px;
+    color: #8899b0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+}
+.admin-db-header-btn:hover {
+    background: rgba(201,168,76,0.1);
+    color: #c9a84c;
+}
+.admin-db-logout-btn:hover {
+    background: rgba(231,76,60,0.1);
+    color: #e74c3c;
+}
+
+/* Admin Main Grid (table + recent) */
+.admin-db-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.5rem;
+}
+.admin-db-table-section {
+    min-width: 0;
+}
+
+/* Admin Recent Activities */
+.admin-db-recent-section {
+    background: #0d1b2e;
+    border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    align-self: start;
+    position: sticky;
+    top: 5rem;
+}
+.admin-db-recent-header {
+    padding: 1rem 1.25rem;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #4a6080;
+    background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.admin-db-recent-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+.admin-db-recent-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.admin-db-recent-item:hover { background: rgba(201,168,76,0.04); }
+.admin-db-recent-item:last-child { border-bottom: none; }
+.admin-db-recent-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a6080;
+    flex-shrink: 0;
+}
+.admin-db-recent-info {
+    flex: 1;
+    min-width: 0;
+}
+.admin-db-recent-name {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f0e8d5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.admin-db-recent-type {
+    display: block;
+    font-size: 10px;
+    color: #4a6080;
+    margin-top: 2px;
+}
+.admin-db-recent-time {
+    font-size: 10px;
+    color: #4a6080;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Table column helpers */
+.admin-db-email-col {
+    color: #8899b0;
+    font-size: 12px;
+}
+.admin-db-extra-col {
+    color: #8899b0;
+    font-size: 12px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.admin-db-date-col {
+    color: #4a6080;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+/* Status update select in table */
+.admin-db-status-select {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 6px;
+    padding: 0.25rem 0.4rem;
+    color: #f0e8d5;
+    font-size: 11px;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    max-width: 110px;
+}
+.admin-db-status-select:focus { border-color: #c9a84c; }
+
+/* Admin Detail Card */
+.admin-db-detail-card {
+    background: rgba(201,168,76,0.04);
+    border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+.admin-db-detail-card h3 {
+    font-size: 12px;
+    color: #c9a84c;
+    margin: 0 0 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+.admin-db-detail-card table {
+    width: 100%;
+    font-size: 13px;
+    border-collapse: collapse;
+}
+.admin-db-detail-card table td {
+    padding: 4px 0;
+    vertical-align: top;
+}
+.admin-db-detail-card table td:first-child {
+    color: #8899b0;
+    width: 35%;
+}
+.admin-db-detail-card table td:last-child {
+    color: #f0e8d5;
+    text-align: right;
+}
+
+/* Contact Form Section */
+.contact-section {
+    padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
+}
+.contact-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+}
+.contact-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+}
+.contact-form {
+    background: rgba(13, 27, 46, 0.6);
+    border: 1px solid rgba(201, 168, 76, 0.1);
+    border-radius: 16px;
+    padding: 2.5rem;
+    backdrop-filter: blur(10px);
+}
+.contact-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+.contact-form-grid .field-item.full-width {
+    grid-column: 1 / -1;
+}
+.contact-form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.contact-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .inquiry-modal {
@@ -3463,6 +3729,26 @@ body {
     .admin-db-table td {
         padding: 0.6rem 0.75rem;
         font-size: 11px;
+    }
+
+    .admin-db-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-db-recent-section {
+        position: static;
+    }
+
+    .admin-db-recent-list {
+        max-height: 300px;
+    }
+
+    .contact-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-form {
+        padding: 1.5rem;
     }
 
     .admin-db-metrics {

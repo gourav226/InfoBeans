@@ -1,34 +1,27 @@
 const express = require('express');
-const serverless = require('serverless-http');
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
+const PORT = process.env.PORT || 5000;
+const MONGODB_URI = process.env.MONGODB_URI;
+const JWT_SECRET = process.env.JWT_SECRET || 'infobeans-secret-key-2026';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'gourav289';
 
 const app = express();
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({
+  origin: ['http://localhost:8888', 'http://localhost:5000', 'https://infobeans.netlify.app', 'https://inspiring-turing-8a0f2c.netlify.app'],
+  credentials: true
+}));
 app.use(express.json({ limit: '10mb' }));
 
-const MONGODB_URI = process.env.MONGODB_URI;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'gourav289';
-const JWT_SECRET = process.env.JWT_SECRET || 'infobeans-secret-key-2026';
-
-let cachedDb = null;
-
-async function connectDB() {
-  if (cachedDb && mongoose.connection.readyState === 1) return cachedDb;
-  try {
-    const conn = await mongoose.connect(MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 8000
-    });
-    cachedDb = conn;
-    return conn;
-  } catch (err) {
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => {
     console.error('MongoDB connection error:', err.message);
-    throw err;
-  }
-}
+    process.exit(1);
+  });
 
 const leadSchema = new mongoose.Schema({
   type: {
@@ -67,14 +60,7 @@ const leadSchema = new mongoose.Schema({
   adminNotes: { type: String }
 }, { timestamps: true });
 
-let Lead = null;
-
-function getLeadModel() {
-  if (!Lead) {
-    Lead = mongoose.models.Lead || mongoose.model('Lead', leadSchema);
-  }
-  return Lead;
-}
+const Lead = mongoose.models.Lead || mongoose.model('Lead', leadSchema);
 
 function authMiddleware(req, res, next) {
   const header = req.headers.authorization;
@@ -102,15 +88,13 @@ app.get('/api/auth/verify', authMiddleware, (req, res) => {
   res.json({ success: true, message: 'Token valid' });
 });
 
-app.get('/api/health', async (req, res) => {
+app.get('/api/health', (req, res) => {
   const dbState = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-  res.json({ success: true, message: 'API is running', db: dbState, time: new Date().toISOString() });
+  res.json({ success: true, message: 'Server running', db: dbState, time: new Date().toISOString() });
 });
 
 app.post('/api/leads', async (req, res) => {
   try {
-    await connectDB();
-    const Model = getLeadModel();
     const { type, name, email } = req.body;
     if (!type || !name || !email) {
       return res.status(400).json({ success: false, message: 'type, name, and email are required' });
@@ -119,7 +103,7 @@ app.post('/api/leads', async (req, res) => {
     if (!validTypes.includes(type)) {
       return res.status(400).json({ success: false, message: `Invalid type. Must be one of: ${validTypes.join(', ')}` });
     }
-    const lead = new Model(req.body);
+    const lead = new Lead(req.body);
     const saved = await lead.save();
     res.status(201).json({ success: true, data: saved });
   } catch (err) {
@@ -128,17 +112,12 @@ app.post('/api/leads', async (req, res) => {
       const messages = Object.values(err.errors).map(e => e.message);
       return res.status(400).json({ success: false, message: messages.join(', ') });
     }
-    if (err.message && err.message.includes('MongoDB')) {
-      return res.status(503).json({ success: false, message: 'Database connection unavailable. Please try again later.' });
-    }
-    res.status(500).json({ success: false, message: err.message || 'Server error. Please try again.' });
+    res.status(500).json({ success: false, message: 'Server error. Please try again.' });
   }
 });
 
 app.get('/api/leads', authMiddleware, async (req, res) => {
   try {
-    await connectDB();
-    const Model = getLeadModel();
     const { search, status, type, page = '1', limit = '200' } = req.query;
     const query = {};
 
@@ -161,8 +140,8 @@ app.get('/api/leads', authMiddleware, async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const [data, total] = await Promise.all([
-      Model.find(query).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)),
-      Model.countDocuments(query)
+      Lead.find(query).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)),
+      Lead.countDocuments(query)
     ]);
 
     res.json({
@@ -177,30 +156,22 @@ app.get('/api/leads', authMiddleware, async (req, res) => {
     });
   } catch (err) {
     console.error('List leads error:', err);
-    if (err.message && err.message.includes('MongoDB')) {
-      return res.status(503).json({ success: false, message: 'Database unavailable' });
-    }
-    res.status(500).json({ success: false, message: err.message || 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
 app.get('/api/leads/:id', authMiddleware, async (req, res) => {
   try {
-    await connectDB();
-    const Model = getLeadModel();
-    const lead = await Model.findById(req.params.id);
+    const lead = await Lead.findById(req.params.id);
     if (!lead) return res.status(404).json({ success: false, message: 'Lead not found' });
     res.json({ success: true, data: lead });
   } catch (err) {
-    console.error('Get lead error:', err);
-    res.status(500).json({ success: false, message: err.message || 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
 app.put('/api/leads/:id', authMiddleware, async (req, res) => {
   try {
-    await connectDB();
-    const Model = getLeadModel();
     const allowed = ['status', 'adminNotes'];
     const updates = {};
     for (const key of allowed) {
@@ -212,44 +183,40 @@ app.put('/api/leads/:id', authMiddleware, async (req, res) => {
         return res.status(400).json({ success: false, message: `Invalid status` });
       }
     }
-    const lead = await Model.findByIdAndUpdate(req.params.id, { $set: updates }, { new: true });
+    const lead = await Lead.findByIdAndUpdate(req.params.id, { $set: updates }, { new: true });
     if (!lead) return res.status(404).json({ success: false, message: 'Lead not found' });
     res.json({ success: true, data: lead });
   } catch (err) {
-    console.error('Update lead error:', err);
-    res.status(500).json({ success: false, message: err.message || 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
 app.delete('/api/leads/:id', authMiddleware, async (req, res) => {
   try {
-    await connectDB();
-    const Model = getLeadModel();
-    const lead = await Model.findByIdAndDelete(req.params.id);
+    const lead = await Lead.findByIdAndDelete(req.params.id);
     if (!lead) return res.status(404).json({ success: false, message: 'Lead not found' });
     res.json({ success: true, message: 'Deleted successfully' });
   } catch (err) {
-    console.error('Delete lead error:', err);
-    res.status(500).json({ success: false, message: err.message || 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
 app.get('/api/dashboard/stats', authMiddleware, async (req, res) => {
   try {
-    await connectDB();
-    const Model = getLeadModel();
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     const [total, newLeads, todayLeads, typeCounts, recent] = await Promise.all([
-      Model.countDocuments(),
-      Model.countDocuments({ status: 'New' }),
-      Model.countDocuments({ createdAt: { $gte: todayStart } }),
-      Model.aggregate([{ $group: { _id: '$type', count: { $sum: 1 } } }]),
-      Model.find().sort({ createdAt: -1 }).limit(10).select('name type status createdAt')
+      Lead.countDocuments(),
+      Lead.countDocuments({ status: 'New' }),
+      Lead.countDocuments({ createdAt: { $gte: todayStart } }),
+      Lead.aggregate([
+        { $group: { _id: '$type', count: { $sum: 1 } } }
+      ]),
+      Lead.find().sort({ createdAt: -1 }).limit(10).select('name type status createdAt')
     ]);
 
-    const statusPipeline = await Model.aggregate([
+    const statusPipeline = await Lead.aggregate([
       { $group: { _id: '$status', count: { $sum: 1 } } }
     ]);
 
@@ -266,12 +233,14 @@ app.get('/api/dashboard/stats', authMiddleware, async (req, res) => {
     });
   } catch (err) {
     console.error('Stats error:', err);
-    res.status(500).json({ success: false, message: err.message || 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found` });
+  res.status(404).json({ success: false, message: 'Not found' });
 });
 
-module.exports.handler = serverless(app);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
