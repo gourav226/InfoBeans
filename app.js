@@ -173,13 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // State Variables
     let selectedType = 'landing';
-    let basePrice = 12000;
+    let basePrice = 4999;
     let selectedPages = 5;
     let selectedFeatures = [];
     let timelineMultiplier = 1.0;
     let timelineName = 'standard';
-    let calculatedMinPrice = 12000;
-    let calculatedMaxPrice = 14400;
+    let calculatedMinPrice = 4999;
+    let calculatedMaxPrice = 5999;
 
     // Type Card Select
     typeCards.forEach(card => {
@@ -189,12 +189,12 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedType = card.getAttribute('data-type');
             
             const baseMapping = {
-                'landing': 12000,
-                'corporate': 32000,
-                'ecommerce': 55000,
-                'saas': 85000
+                'landing': 4999,
+                'corporate': 14999,
+                'ecommerce': 24999,
+                'saas': 39999
             };
-            basePrice = baseMapping[selectedType] || 12000;
+            basePrice = baseMapping[selectedType] || 4999;
             calculateEstimate();
         });
     });
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const calculateEstimate = () => {
         const extraPages = Math.max(0, selectedPages - 5);
-        const pageCost = extraPages * 1200;
+        const pageCost = extraPages * 500;
 
         let featuresCost = 0;
         selectedFeatures = [];
@@ -694,8 +694,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     project_type: 'ecommerce',
                     pages: '10',
                     timeline: 'standard',
-                    estimate: 'E-Commerce Storefront | 10 Pages | Delivery Multiplier: 1.0x | Estimate: ₹55,000 - ₹66,000',
-                    min_price: 55000
+                    estimate: 'E-Commerce Storefront | 10 Pages | Delivery Multiplier: 1.0x | Estimate: ₹24,999 - ₹29,999',
+                    min_price: 24999
                 },
                 {
                     date: new Date().toLocaleDateString('en-IN'),
@@ -705,8 +705,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     project_type: 'saas',
                     pages: '15',
                     timeline: 'rush',
-                    estimate: 'SaaS Web Application | 15 Pages | Features: CMS Panel, Payment Gateway | Estimate: ₹1,11,000 - ₹1,33,200',
-                    min_price: 111000
+                    estimate: 'SaaS Web Application | 15 Pages | Features: CMS Panel, Payment Gateway | Estimate: ₹49,999 - ₹59,999',
+                    min_price: 49999
                 }
             ];
             const sampleApplications = [
