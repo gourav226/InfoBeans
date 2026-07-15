@@ -181,6 +181,34 @@ document.addEventListener('DOMContentLoaded', () => {
     let calculatedMinPrice = 4999;
     let calculatedMaxPrice = 5999;
 
+    // Parse URL parameters for pre-populating estimator from services page
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('type') && urlParams.has('price') && urlParams.has('pages')) {
+        const urlType = urlParams.get('type');
+        const urlPrice = parseInt(urlParams.get('price'), 10);
+        const urlPages = parseInt(urlParams.get('pages'), 10);
+
+        if (urlType && !isNaN(urlPrice) && !isNaN(urlPages)) {
+            selectedType = urlType;
+            basePrice = urlPrice;
+            selectedPages = urlPages;
+
+            typeCards.forEach(c => {
+                c.classList.remove('active');
+                if (c.getAttribute('data-type') === selectedType) {
+                    c.classList.add('active');
+                }
+            });
+
+            if (pageRange) {
+                pageRange.value = selectedPages;
+            }
+            if (pageCountVal) {
+                pageCountVal.textContent = `${selectedPages} Page${selectedPages > 1 ? 's' : ''}`;
+            }
+        }
+    }
+
     // Type Card Select
     typeCards.forEach(card => {
         card.addEventListener('click', () => {
@@ -227,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const calculateEstimate = () => {
+        if (!sumProjectType) return; // Skip if not on estimator page
         const extraPages = Math.max(0, selectedPages - 5);
         const pageCost = extraPages * 500;
 
@@ -277,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applySubOptionBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Stop accordion toggle when button is clicked
+            e.stopPropagation();
             
             const card = btn.closest('.expand-service-card');
             const serviceType = card.getAttribute('data-service-type');
@@ -287,76 +316,196 @@ document.addEventListener('DOMContentLoaded', () => {
                 const baseVal = parseInt(selectedRadio.getAttribute('data-base-price'), 10);
                 const pagesVal = parseInt(selectedRadio.getAttribute('data-pages'), 10);
                 
-                // 1. Sync Estimator Project Type Card Active States
-                typeCards.forEach(c => {
-                    c.classList.remove('active');
-                    if (c.getAttribute('data-type') === serviceType) {
-                        c.classList.add('active');
+                if (typeCards.length > 0) {
+                    // Estimator is on the same page — apply directly
+                    typeCards.forEach(c => {
+                        c.classList.remove('active');
+                        if (c.getAttribute('data-type') === serviceType) {
+                            c.classList.add('active');
+                        }
+                    });
+                    
+                    selectedType = serviceType;
+                    basePrice = baseVal;
+                    selectedPages = pagesVal;
+                    
+                    if (pageRange) {
+                        pageRange.value = selectedPages;
                     }
-                });
-                
-                // 2. Set Calculator state values
-                selectedType = serviceType;
-                basePrice = baseVal;
-                selectedPages = pagesVal;
-                
-                // 3. Update Range Slider controls
-                if (pageRange) {
-                    pageRange.value = selectedPages;
-                }
-                if (pageCountVal) {
-                    pageCountVal.textContent = `${selectedPages} Page${selectedPages > 1 ? 's' : ''}`;
-                }
-                
-                // 4. Trigger calculations & flash update visual feedback
-                calculateEstimate();
-                
-                const summaryCard = document.querySelector('.summary-card');
-                if (summaryCard) {
-                    summaryCard.classList.add('highlight-flash');
-                    setTimeout(() => summaryCard.classList.remove('highlight-flash'), 1000);
-                }
-                
-                // 5. Scroll smoothly to Estimator Dashboard
-                const estimatorSection = document.getElementById('estimator');
-                if (estimatorSection) {
-                    estimatorSection.scrollIntoView({ behavior: 'smooth' });
+                    if (pageCountVal) {
+                        pageCountVal.textContent = `${selectedPages} Page${selectedPages > 1 ? 's' : ''}`;
+                    }
+                    
+                    calculateEstimate();
+                    
+                    const summaryCard = document.querySelector('.summary-card');
+                    if (summaryCard) {
+                        summaryCard.classList.add('highlight-flash');
+                        setTimeout(() => summaryCard.classList.remove('highlight-flash'), 1000);
+                    }
+                    
+                    const estimatorSection = document.getElementById('estimator');
+                    if (estimatorSection) {
+                        estimatorSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else {
+                    // Estimator is on a separate page — redirect with params
+                    window.location.href = `estimator.html?type=${encodeURIComponent(serviceType)}&price=${baseVal}&pages=${pagesVal}`;
                 }
             }
         });
     });
 
     /* ==========================================================================
-       APPLY ESTIMATOR TO CONTACT FORM
+       PROJECT INQUIRY FORM MODAL CONTROLLER
        ========================================================================== */
-    const applyBtn = document.getElementById('apply-estimator-btn');
-    const formType = document.getElementById('form-project-type');
-    const formPages = document.getElementById('form-pages');
-    const formTimeline = document.getElementById('form-timeline');
-    const formEstimateField = document.getElementById('form-estimate');
+    const startProjectBtn = document.getElementById('start-project-btn');
+    const inquiryModal = document.getElementById('inquiry-modal');
+    const inquiryModalClose = document.getElementById('inquiry-modal-close');
+    const inquiryCancelBtn = document.getElementById('inq-cancel-btn');
+    const inquiryForm = document.getElementById('project-inquiry-form');
+    const inquirySuccess = document.getElementById('inquiry-success');
+    const inquiryLoading = document.getElementById('inquiry-loading');
+    const inquirySuccessBtn = document.getElementById('inq-success-btn');
 
-    if (applyBtn) {
-        applyBtn.addEventListener('click', () => {
-            if (formType) formType.value = selectedType;
-            if (formPages) formPages.value = selectedPages;
-            if (formTimeline) formTimeline.value = timelineName;
-            
-            const rangeMinStr = totalMinPrice.textContent;
-            const rangeMaxStr = totalMaxPrice.textContent;
-            const featuresSummary = selectedFeatures.length > 0 ? ` [Features: ${selectedFeatures.join(', ')}]` : '';
-            const summaryStr = `${getProjectTypeName(selectedType)} | ${selectedPages} Pages${featuresSummary} | Delivery Multiplier: ${timelineMultiplier}x | Estimate: ${rangeMinStr} - ${rangeMaxStr}`;
-            
-            if (formEstimateField) {
-                formEstimateField.value = summaryStr;
-                formEstimateField.classList.add('highlight-flash');
-                setTimeout(() => formEstimateField.classList.remove('highlight-flash'), 1000);
+    const inqEstType = document.getElementById('inq-est-type');
+    const inqEstPages = document.getElementById('inq-est-pages');
+    const inqEstFeatures = document.getElementById('inq-est-features');
+    const inqEstTimeline = document.getElementById('inq-est-timeline');
+    const inqEstCost = document.getElementById('inq-est-cost');
+
+    const timelineLabels = {
+        rush: '2-3 Weeks (Express Rush)',
+        standard: '4-6 Weeks (Standard)',
+        relaxed: '8-12 Weeks (Flexible)'
+    };
+
+    function updateInquiryEstimatorData() {
+        if (!inqEstType) return;
+        inqEstType.textContent = getProjectTypeName(selectedType);
+        inqEstPages.textContent = selectedPages;
+        const featuresList = selectedFeatures.length > 0 ? selectedFeatures.join(', ') : 'None';
+        inqEstFeatures.textContent = featuresList;
+        inqEstTimeline.textContent = timelineLabels[timelineName] || 'Standard';
+        const minStr = totalMinPrice ? totalMinPrice.textContent : `₹${calculatedMinPrice.toLocaleString('en-IN')}`;
+        const maxStr = totalMaxPrice ? totalMaxPrice.textContent : `₹${calculatedMaxPrice.toLocaleString('en-IN')}`;
+        inqEstCost.textContent = `${minStr} - ${maxStr}`;
+    }
+
+    function openInquiryModal() {
+        updateInquiryEstimatorData();
+        inquiryModal.classList.add('open');
+        inquiryForm.style.display = 'block';
+        inquirySuccess.style.display = 'none';
+        inquiryLoading.style.display = 'none';
+        inquiryForm.reset();
+        document.body.style.overflow = 'hidden';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function closeInquiryModal() {
+        inquiryModal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    if (startProjectBtn) {
+        startProjectBtn.addEventListener('click', openInquiryModal);
+    }
+    if (inquiryModalClose) {
+        inquiryModalClose.addEventListener('click', closeInquiryModal);
+    }
+    if (inquiryCancelBtn) {
+        inquiryCancelBtn.addEventListener('click', closeInquiryModal);
+    }
+    if (inquiryModal) {
+        inquiryModal.addEventListener('click', (e) => {
+            if (e.target === inquiryModal) closeInquiryModal();
+        });
+    }
+
+    function getTimelineDisplayName() {
+        const activeTimelineBtn = document.querySelector('.timeline-btn.active');
+        if (activeTimelineBtn) {
+            const title = activeTimelineBtn.querySelector('.timeline-title');
+            return title ? title.textContent : 'Standard Delivery';
+        }
+        return 'Standard Delivery (4-6 Weeks)';
+    }
+
+    if (inquiryForm) {
+        inquiryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('inq-name').value.trim();
+            const email = document.getElementById('inq-email').value.trim();
+            const phone = document.getElementById('inq-phone').value.trim();
+            const businessName = document.getElementById('inq-business').value.trim();
+            const description = document.getElementById('inq-description').value.trim();
+            const communicationMethod = document.getElementById('inq-comm-method').value;
+
+            if (!name || !email || !phone || !businessName || !description || !communicationMethod) {
+                alert('Please fill in all required fields.');
+                return;
             }
 
-            const contactSection = document.getElementById('contact');
-            if (contactSection) {
-                contactSection.scrollIntoView({ behavior: 'smooth' });
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            inquiryForm.style.display = 'none';
+            inquiryLoading.style.display = 'flex';
+
+            const payload = {
+                name,
+                email,
+                phone,
+                businessName,
+                description,
+                communicationMethod,
+                projectType: getProjectTypeName(selectedType),
+                pages: selectedPages,
+                features: selectedFeatures,
+                timeline: getTimelineDisplayName(),
+                estimatedCost: {
+                    min: calculatedMinPrice,
+                    max: calculatedMaxPrice
+                }
+            };
+
+            try {
+                const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:8888'
+                    : '';
+
+                const response = await fetch(`${API_BASE}/api/projects`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                inquiryLoading.style.display = 'none';
+
+                if (result.success) {
+                    inquirySuccess.style.display = 'flex';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                } else {
+                    inquiryForm.style.display = 'block';
+                    alert(result.message || 'Something went wrong. Please try again.');
+                }
+            } catch (err) {
+                inquiryLoading.style.display = 'none';
+                inquiryForm.style.display = 'block';
+                alert('Unable to connect to the server. Please try again later.');
             }
         });
+    }
+
+    if (inquirySuccessBtn) {
+        inquirySuccessBtn.addEventListener('click', closeInquiryModal);
     }
 
     /* ==========================================================================
@@ -430,112 +579,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 uploadedFileName = '';
                 uploadedFileSize = '';
             }
-        });
-    }
-
-    /* ==========================================================================
-       MULTI-STEP BOOKING FORM CONTROLLER (SAVES TO LOCALSTORAGE)
-       ========================================================================== */
-    const formSteps = document.querySelectorAll('.form-step');
-    const nextBtns = document.querySelectorAll('.next-step-btn');
-    const prevBtns = document.querySelectorAll('.prev-step-btn');
-    const projectForm = document.getElementById('project-booking-form');
-    const formSuccessOverlay = document.getElementById('form-success-overlay');
-    const closeAlertBtn = document.getElementById('close-alert-btn');
-    
-    let currentStep = 0;
-
-    const showStep = (stepIndex) => {
-        formSteps.forEach((step, idx) => {
-            step.classList.remove('active');
-            if (idx === stepIndex) {
-                step.classList.add('active');
-            }
-        });
-        currentStep = stepIndex;
-    };
-
-    const validateStepFields = (stepIndex) => {
-        const stepElement = formSteps[stepIndex];
-        const requiredInputs = stepElement.querySelectorAll('[required]');
-        let isValid = true;
-        
-        requiredInputs.forEach(input => {
-            if (!input.checkValidity()) {
-                input.reportValidity();
-                isValid = false;
-            }
-        });
-        return isValid;
-    };
-
-    nextBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (validateStepFields(currentStep)) {
-                showStep(currentStep + 1);
-            }
-        });
-    });
-
-    prevBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            showStep(currentStep - 1);
-        });
-    });
-
-    if (projectForm) {
-        projectForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submit-project-btn');
-            const originalContent = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i data-lucide="loader" class="icon-right animate-spin"></i> Processing Request...';
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-
-            const clientName = document.getElementById('client-name').value;
-            const clientEmail = document.getElementById('client-email').value;
-            const clientCompany = document.getElementById('client-company').value || 'Not Provided';
-            const selectedFormType = document.getElementById('form-project-type').value;
-            const selectedFormPages = document.getElementById('form-pages').value;
-            const selectedFormTimeline = document.getElementById('form-timeline').value;
-            const estimateSummaryStr = document.getElementById('form-estimate').value || `Estimate: ₹${calculatedMinPrice.toLocaleString('en-IN')} - ₹${calculatedMaxPrice.toLocaleString('en-IN')}`;
-
-            setTimeout(() => {
-                const inquiries = JSON.parse(localStorage.getItem('infobeans_inquiries') || '[]');
-                const newInquiry = {
-                    date: new Date().toLocaleDateString('en-IN'),
-                    name: clientName,
-                    email: clientEmail,
-                    company: clientCompany,
-                    project_type: selectedFormType,
-                    pages: selectedFormPages,
-                    timeline: selectedFormTimeline,
-                    estimate: estimateSummaryStr,
-                    min_price: calculatedMinPrice
-                };
-                inquiries.push(newInquiry);
-                localStorage.setItem('infobeans_inquiries', JSON.stringify(inquiries));
-
-                formSuccessOverlay.classList.add('open');
-                
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalContent;
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
-
-                projectForm.reset();
-                showStep(0);
-            }, 1500);
-        });
-    }
-
-    if (closeAlertBtn) {
-        closeAlertBtn.addEventListener('click', () => {
-            formSuccessOverlay.classList.remove('open');
         });
     }
 

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="InfoBeans Private Limited - Premium Web Development, E-Commerce, Local SEO, and Digital Consultancy.">
+    <title>Our Services | InfoBeans Private Limited</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Glow Blobs -->
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">IB</span>
+                <span class="logo-text">InfoBeans<span class="text-gradient">.</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="services.html" class="active">Services</a>
+                <a href="portfolio.html">Portfolio</a>
+                <a href="estimator.html">Cost Estimator</a>
+                <!-- More Dropdown Options Menu -->
+                <div class="nav-dropdown-wrapper">
+                    <a href="javascript:void(0)" class="dropdown-trigger">More Options <i data-lucide="chevron-down" class="dropdown-chevron"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="careers.html">Careers / Jobs</a>
+                        <a href="admin.html">Admin Portal</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="nav-actions">
+                <a href="estimator.html" class="btn btn-primary btn-sm">Get Estimate</a>
+                <a href="admin.html" class="admin-lock-btn" title="Admin Portal">
+                    <i data-lucide="lock"></i>
+                </a>
+                <button class="mobile-toggle" aria-label="Toggle Menu">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Nav Overlay -->
+    <div class="mobile-menu-overlay">
+        <div class="mobile-menu-content">
+            <button class="mobile-close" aria-label="Close Menu">
+                <i data-lucide="x"></i>
+            </button>
+            <nav class="mobile-nav-links">
+                <a href="index.html" class="mobile-link">Home</a>
+                <a href="services.html" class="mobile-link">Services</a>
+                <a href="portfolio.html" class="mobile-link">Portfolio</a>
+                <a href="estimator.html" class="mobile-link">Cost Estimator</a>
+                <a href="careers.html" class="mobile-link">Careers</a>
+
+            </nav>
+            <div class="mobile-menu-actions">
+                <a href="estimator.html" class="btn btn-primary w-full">Get Estimate</a>
+                <a href="admin.html" class="btn btn-secondary w-full mt-sm">
+                    <i data-lucide="lock" class="icon-left"></i> Admin Portal
+                </a>
+            </div>
+        </div>
+    </div>
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tag font-semibold">Services Suite</span>
+                <h2 class="section-title">Smart Solutions Crafted for Growth</h2>
+                <p class="section-subtitle">Click on any core service to open sub-options and details dynamically underneath.</p>
+            </div>
+            
+            <div class="services-grid-expandable">
+                <!-- Service 1 -->
+                <div class="expand-service-card" data-service-type="landing">
+                    <div class="service-card-main">
+                        <div class="service-icon-wrapper">
+                            <i data-lucide="globe" class="service-icon"></i>
+                        </div>
+                        <h3 class="service-title">Business & Corporate Design</h3>
+                        <p class="service-description">Bespoke portfolios and corporate sites designed for maximum conversions and authority. Click to customize.</p>
+                        <span class="expand-indicator"><i data-lucide="chevron-down"></i> Explore Options</span>
+                    </div>
+                    <!-- Inline Options Dropdown -->
+                    <div class="service-card-dropdown">
+                        <h4 class="dropdown-section-title">Select Your Package</h4>
+                        <div class="dropdown-options-list">
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_corporate" class="service-sub-option-radio" data-base-price="4999" data-pages="1" checked>
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Single-Page Campaign Site</span>
+                                    <span class="option-desc">Fast landing page for business marketing campaigns (₹4,999)</span>
+                                </div>
+                            </label>
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_corporate" class="service-sub-option-radio" data-base-price="14999" data-pages="5">
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Premium Multi-Page Portal</span>
+                                    <span class="option-desc">5-page corporate site detailing services and team portfolio (₹14,999)</span>
+                                </div>
+                            </label>
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_corporate" class="service-sub-option-radio" data-base-price="9999" data-pages="3">
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Executive Personal Portfolio</span>
+                                    <span class="option-desc">Bespoke portfolio layout for consultants and creative experts (₹9,999)</span>
+                                </div>
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm apply-sub-option-btn">Apply to Cost Calculator</button>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="expand-service-card" data-service-type="ecommerce">
+                    <div class="service-card-main">
+                        <div class="service-icon-wrapper">
+                            <i data-lucide="shopping-bag" class="service-icon"></i>
+                        </div>
+                        <h3 class="service-title">E-Commerce Storefronts</h3>
+                        <p class="service-description">Sell products online with premium cart systems and native UPI checkouts. Click to customize.</p>
+                        <span class="expand-indicator"><i data-lucide="chevron-down"></i> Explore Options</span>
+                    </div>
+                    <!-- Inline Options Dropdown -->
+                    <div class="service-card-dropdown">
+                        <h4 class="dropdown-section-title">Select Your E-Commerce Storefront</h4>
+                        <div class="dropdown-options-list">
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_ecommerce" class="service-sub-option-radio" data-base-price="14999" data-pages="8" checked>
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">WooCommerce Digital Shop</span>
+                                    <span class="option-desc">Standard WordPress-based shop with basic dashboard configurations (₹14,999)</span>
+                                </div>
+                            </label>
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_ecommerce" class="service-sub-option-radio" data-base-price="24999" data-pages="10">
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Premium Shopify Installation</span>
+                                    <span class="option-desc">Premium Shopify storefront custom-tailored for retail brands (₹24,999)</span>
+                                </div>
+                            </label>
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_ecommerce" class="service-sub-option-radio" data-base-price="34999" data-pages="12">
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Custom Headless React Store</span>
+                                    <span class="option-desc">Super fast React storefront for maximum security and custom layouts (₹34,999)</span>
+                                </div>
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm apply-sub-option-btn">Apply to Cost Calculator</button>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="expand-service-card" data-service-type="landing">
+                    <div class="service-card-main">
+                        <div class="service-icon-wrapper">
+                            <i data-lucide="map-pin" class="service-icon"></i>
+                        </div>
+                        <h3 class="service-title">Google Maps & SEO Campaigns</h3>
+                        <p class="service-description">Boost business discovery and attract digital leads locally. Click to customize.</p>
+                        <span class="expand-indicator"><i data-lucide="chevron-down"></i> Explore Options</span>
+                    </div>
+                    <!-- Inline Options Dropdown -->
+                    <div class="service-card-dropdown">
+                        <h4 class="dropdown-section-title">Select Your SEO Configuration</h4>
+                        <div class="dropdown-options-list">
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_seo" class="service-sub-option-radio" data-base-price="2999" data-pages="1" checked>
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Google Profile setup & Verification</span>
+                                    <span class="option-desc">Google Map profile registration, keywords tag configuration (₹2,999)</span>
+                                </div>
+                            </label>
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_seo" class="service-sub-option-radio" data-base-price="6999" data-pages="3">
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Complete Local SEO Campaign</span>
+                                    <span class="option-desc">Competitor search audits, technical schema markup, review triggers (₹6,999)</span>
+                                </div>
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm apply-sub-option-btn">Apply to Cost Calculator</button>
+                    </div>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="expand-service-card" data-service-type="saas">
+                    <div class="service-card-main">
+                        <div class="service-icon-wrapper">
+                            <i data-lucide="message-square" class="service-icon"></i>
+                        </div>
+                        <h3 class="service-title">WhatsApp CRM & Automation</h3>
+                        <p class="service-description">Automate support channels and client orders via WhatsApp API. Click to customize.</p>
+                        <span class="expand-indicator"><i data-lucide="chevron-down"></i> Explore Options</span>
+                    </div>
+                    <!-- Inline Options Dropdown -->
+                    <div class="service-card-dropdown">
+                        <h4 class="dropdown-section-title">Select WhatsApp Solution</h4>
+                        <div class="dropdown-options-list">
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_whatsapp" class="service-sub-option-radio" data-base-price="3999" data-pages="2" checked>
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Auto-Responder Greeting Templates</span>
+                                    <span class="option-desc">Custom click-to-chat widgets, setup quick template replies (₹3,999)</span>
+                                </div>
+                            </label>
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_whatsapp" class="service-sub-option-radio" data-base-price="9999" data-pages="4">
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">AI Ordering & Chatbot Integration</span>
+                                    <span class="option-desc">Dynamic automated chat engine parsing catalog selections & orders (₹9,999)</span>
+                                </div>
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm apply-sub-option-btn">Apply to Cost Calculator</button>
+                    </div>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="expand-service-card" data-service-type="landing">
+                    <div class="service-card-main">
+                        <div class="service-icon-wrapper">
+                            <i data-lucide="layout" class="service-icon"></i>
+                        </div>
+                        <h3 class="service-title">Social Graphics & Branding</h3>
+                        <p class="service-description">Creative designs, flyers, and branding assets to draw eyes to promotions. Click to customize.</p>
+                        <span class="expand-indicator"><i data-lucide="chevron-down"></i> Explore Options</span>
+                    </div>
+                    <!-- Inline Options Dropdown -->
+                    <div class="service-card-dropdown">
+                        <h4 class="dropdown-section-title">Select Your Branding Kit</h4>
+                        <div class="dropdown-options-list">
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_branding" class="service-sub-option-radio" data-base-price="1999" data-pages="1" checked>
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Visual Poster Flyers Campaign</span>
+                                    <span class="option-desc">5 custom vector-styled promo flyers for digital shares (₹1,999)</span>
+                                </div>
+                            </label>
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_branding" class="service-sub-option-radio" data-base-price="4999" data-pages="3">
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Complete Branding & Social identity</span>
+                                    <span class="option-desc">Custom brand guide logos, color styles, matching status template sets (₹4,999)</span>
+                                </div>
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm apply-sub-option-btn">Apply to Cost Calculator</button>
+                    </div>
+                </div>
+
+                <!-- Service 6 -->
+                <div class="expand-service-card" data-service-type="saas">
+                    <div class="service-card-main">
+                        <div class="service-icon-wrapper">
+                            <i data-lucide="calculator" class="service-icon"></i>
+                        </div>
+                        <h3 class="service-title">GST Billing & ERP Portals</h3>
+                        <p class="service-description">Custom retail stock control and billing applications. Click to customize.</p>
+                        <span class="expand-indicator"><i data-lucide="chevron-down"></i> Explore Options</span>
+                    </div>
+                    <!-- Inline Options Dropdown -->
+                    <div class="service-card-dropdown">
+                        <h4 class="dropdown-section-title">Select Systems Configuration</h4>
+                        <div class="dropdown-options-list">
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_erp" class="service-sub-option-radio" data-base-price="9999" data-pages="5" checked>
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Invoicing & PDF POS System</span>
+                                    <span class="option-desc">Local retail receipt generation, basic client accounting (₹9,999)</span>
+                                </div>
+                            </label>
+                            <label class="custom-radio-option">
+                                <input type="radio" name="sub_opt_erp" class="service-sub-option-radio" data-base-price="14999" data-pages="8">
+                                <span class="radio-indicator"></span>
+                                <div class="option-details">
+                                    <span class="option-title">Retail Inventory & Warehousing App</span>
+                                    <span class="option-desc">Stock count alerts, client ledgers sync dashboard database (₹14,999)</span>
+                                </div>
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm apply-sub-option-btn">Apply to Cost Calculator</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand-col">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">IB</span>
+                    <span class="logo-text">InfoBeans<span class="text-gradient">.</span></span>
+                </a>
+                <p class="footer-desc">Crafting state-of-the-art websites, E-commerce platforms, local marketing tools, and corporate systems for modern companies globally.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i data-lucide="linkedin"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="twitter"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="github"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4 class="footer-title">Agency</h4>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="services.html">Our Services</a>
+                    <a href="portfolio.html">Case Studies</a>
+                    <a href="estimator.html">Cost Estimator</a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4 class="footer-title">Services</h4>
+                <div class="footer-links">
+                    <a href="services.html">Business Websites</a>
+                    <a href="services.html">E-Commerce</a>
+                    <a href="services.html">Local SEO Optimization</a>
+                    <a href="services.html">WhatsApp Bots</a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4 class="footer-title">Access</h4>
+                <div class="footer-links">
+                    <a href="admin.html"><i data-lucide="lock" class="icon-left icon-sm"></i> Admin Portal</a>
+                    <a href="careers.html">Careers Section</a>
+                    <a href="mailto:hello@infobeans.com">hello@infobeans.com</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container footer-bottom-container">
+                <p class="copyright-text">&copy; 2026 InfoBeans Private Limited. All rights reserved.</p>
+                <div class="footer-legal-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

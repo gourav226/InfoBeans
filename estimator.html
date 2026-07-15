@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="InfoBeans Private Limited - Premium Web Development, E-Commerce, Local SEO, and Digital Consultancy.">
+    <title>Cost Estimator | InfoBeans Private Limited</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Glow Blobs -->
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">IB</span>
+                <span class="logo-text">InfoBeans<span class="text-gradient">.</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="portfolio.html">Portfolio</a>
+                <a href="estimator.html" class="active">Cost Estimator</a>
+                <!-- More Dropdown Options Menu -->
+                <div class="nav-dropdown-wrapper">
+                    <a href="javascript:void(0)" class="dropdown-trigger">More Options <i data-lucide="chevron-down" class="dropdown-chevron"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="careers.html">Careers / Jobs</a>
+                        <a href="admin.html">Admin Portal</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="nav-actions">
+                <a href="estimator.html" class="btn btn-primary btn-sm">Get Estimate</a>
+                <a href="admin.html" class="admin-lock-btn" title="Admin Portal">
+                    <i data-lucide="lock"></i>
+                </a>
+                <button class="mobile-toggle" aria-label="Toggle Menu">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Nav Overlay -->
+    <div class="mobile-menu-overlay">
+        <div class="mobile-menu-content">
+            <button class="mobile-close" aria-label="Close Menu">
+                <i data-lucide="x"></i>
+            </button>
+            <nav class="mobile-nav-links">
+                <a href="index.html" class="mobile-link">Home</a>
+                <a href="services.html" class="mobile-link">Services</a>
+                <a href="portfolio.html" class="mobile-link">Portfolio</a>
+                <a href="estimator.html" class="mobile-link">Cost Estimator</a>
+                <a href="careers.html" class="mobile-link">Careers</a>
+
+            </nav>
+            <div class="mobile-menu-actions">
+                <a href="estimator.html" class="btn btn-primary w-full">Get Estimate</a>
+                <a href="admin.html" class="btn btn-secondary w-full mt-sm">
+                    <i data-lucide="lock" class="icon-left"></i> Admin Portal
+                </a>
+            </div>
+        </div>
+    </div>
+    <section id="estimator" class="estimator-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tag font-semibold">Web Calculator</span>
+                <h2 class="section-title">Interactive Project Configurator</h2>
+                <p class="section-subtitle">Select your requirements and calculate a real-time price estimate to share with our team.</p>
+            </div>
+            
+            <div class="estimator-wrapper">
+                <div class="estimator-controls">
+                    <!-- Project Type -->
+                    <div class="control-group">
+                        <label class="control-label">1. Select Project Type</label>
+                        <div class="project-type-grid">
+                            <div class="type-card active" data-type="landing" data-base-price="4999">
+                                <i data-lucide="file-text" class="type-icon"></i>
+                                <span class="type-title">Landing Page</span>
+                                <span class="type-desc">Single-page marketing</span>
+                            </div>
+                            <div class="type-card" data-type="corporate" data-base-price="14999">
+                                <i data-lucide="briefcase" class="type-icon"></i>
+                                <span class="type-title">Corporate Site</span>
+                                <span class="type-desc">Multi-page business</span>
+                            </div>
+                            <div class="type-card" data-type="ecommerce" data-base-price="24999">
+                                <i data-lucide="shopping-bag" class="type-icon"></i>
+                                <span class="type-title">E-Commerce</span>
+                                <span class="type-desc">Custom store & payments</span>
+                            </div>
+                            <div class="type-card" data-type="saas" data-base-price="39999">
+                                <i data-lucide="layers" class="type-icon"></i>
+                                <span class="type-title">SaaS / Web Portal</span>
+                                <span class="type-desc">Custom backend & logic</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Number of Pages -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label class="control-label">2. Approximate Number of Pages</label>
+                            <span class="slider-val" id="page-count-val">5 Pages</span>
+                        </div>
+                        <input type="range" id="page-range" min="1" max="30" value="5" class="custom-slider">
+                        <div class="slider-labels">
+                            <span>1 Page</span>
+                            <span>15 Pages</span>
+                            <span>30+ Pages</span>
+                        </div>
+                    </div>
+
+                    <!-- Add-on Features -->
+                    <div class="control-group">
+                        <label class="control-label">3. Select Advanced Features</label>
+                        <div class="features-grid">
+                            <label class="feature-checkbox-label">
+                                <input type="checkbox" class="feature-checkbox" data-price="150" value="seo">
+                                <span class="checkbox-custom"></span>
+                                <div class="checkbox-info">
+                                    <span class="feature-name">Advanced SEO Setup</span>
+                                    <span class="feature-desc">Technical schema & site speed tuning (+₹1,500)</span>
+                                </div>
+                            </label>
+                            <label class="feature-checkbox-label">
+                                <input type="checkbox" class="feature-checkbox" data-price="300" value="cms">
+                                <span class="checkbox-custom"></span>
+                                <div class="checkbox-info">
+                                    <span class="feature-name">CMS Integration</span>
+                                    <span class="feature-desc">Headless WordPress panel (+₹3,000)</span>
+                                </div>
+                            </label>
+                            <label class="feature-checkbox-label">
+                                <input type="checkbox" class="feature-checkbox" data-price="200" value="auth">
+                                <span class="checkbox-custom"></span>
+                                <div class="checkbox-info">
+                                    <span class="feature-name">User Authentication</span>
+                                    <span class="feature-desc">Secure logins & portals (+₹2,000)</span>
+                                </div>
+                            </label>
+                            <label class="feature-checkbox-label">
+                                <input type="checkbox" class="feature-checkbox" data-price="250" value="animations">
+                                <span class="checkbox-custom"></span>
+                                <div class="checkbox-info">
+                                    <span class="feature-name">Rich Animations</span>
+                                    <span class="feature-desc">GSAP & immersive page transitions (+₹2,500)</span>
+                                </div>
+                            </label>
+                            <label class="feature-checkbox-label">
+                                <input type="checkbox" class="feature-checkbox" data-price="500" value="database">
+                                <span class="checkbox-custom"></span>
+                                <div class="checkbox-info">
+                                    <span class="feature-name">Database & Custom API</span>
+                                    <span class="feature-desc">Backend storage and sync integrations (+₹5,000)</span>
+                                </div>
+                            </label>
+                            <label class="feature-checkbox-label">
+                                <input type="checkbox" class="feature-checkbox" data-price="350" value="multilingual">
+                                <span class="checkbox-custom"></span>
+                                <div class="checkbox-info">
+                                    <span class="feature-name">Multilingual Support</span>
+                                    <span class="feature-desc">Dynamic multi-language localization (+₹3,500)</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Urgency -->
+                    <div class="control-group">
+                        <label class="control-label">4. Delivery Timeline</label>
+                        <div class="timeline-tabs">
+                            <button class="timeline-btn" data-multiplier="1.3" data-timeline="rush">
+                                <span class="timeline-title">Express Delivery (Rush)</span>
+                                <span class="timeline-desc">2-3 Weeks (+30%)</span>
+                            </button>
+                            <button class="timeline-btn active" data-multiplier="1.0" data-timeline="standard">
+                                <span class="timeline-title">Standard Delivery</span>
+                                <span class="timeline-desc">4-6 Weeks</span>
+                            </button>
+                            <button class="timeline-btn" data-multiplier="0.9" data-timeline="relaxed">
+                                <span class="timeline-title">Flexible Delivery</span>
+                                <span class="timeline-desc">8-12 Weeks (-10%)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculator Dashboard Summary -->
+                <div class="estimator-summary">
+                    <div class="summary-card">
+                        <h3 class="summary-title">Estimate Summary</h3>
+                        <div class="summary-divider"></div>
+                        <div class="summary-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Project Model</span>
+                                <span class="detail-val text-gradient font-semibold" id="sum-project-type">Landing Page</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Base Cost</span>
+                                <span class="detail-val" id="sum-base-cost">₹4,999</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Pages multiplier (x<span id="sum-page-multiplier-val">1.0</span>)</span>
+                                <span class="detail-val" id="sum-page-cost">+₹0</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Advanced Features Addons</span>
+                                <span class="detail-val" id="sum-features-cost">+₹0</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Timeline Factor</span>
+                                <span class="detail-val" id="sum-timeline-factor">1.0x</span>
+                            </div>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="total-section">
+                            <span class="total-label">Estimated Range</span>
+                            <div class="total-price-range">
+                                <span class="price-val" id="total-min-price">₹4,999</span> - <span class="price-val" id="total-max-price">₹5,999</span>
+                            </div>
+                            <p class="price-disclaimer">All pricing ranges represent initial estimates. Final quotes will be sent after technical discovery.</p>
+                        </div>
+                        <button class="btn btn-primary w-full btn-lg" id="start-project-btn">
+                            Start Project <i data-lucide="arrow-right" class="icon-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Project Inquiry Form Modal -->
+    <div class="inquiry-modal-overlay" id="inquiry-modal">
+        <div class="inquiry-modal">
+            <button class="inquiry-modal-close" id="inquiry-modal-close" aria-label="Close form">
+                <i data-lucide="x"></i>
+            </button>
+            <div class="inquiry-modal-header">
+                <span class="section-tag font-semibold">Start Your Project</span>
+                <h2 class="section-title">Tell Us About Your Project</h2>
+                <p class="inquiry-modal-desc">Fill in your details below and we'll get started on your project right away.</p>
+            </div>
+            <form id="project-inquiry-form" class="inquiry-form" novalidate>
+                <div class="inquiry-form-grid">
+                    <div class="field-item">
+                        <label for="inq-name" class="field-label">Full Name *</label>
+                        <input type="text" id="inq-name" class="form-input" placeholder="e.g. John Doe" required>
+                    </div>
+                    <div class="field-item">
+                        <label for="inq-email" class="field-label">Email Address *</label>
+                        <input type="email" id="inq-email" class="form-input" placeholder="e.g. john@company.com" required>
+                    </div>
+                    <div class="field-item">
+                        <label for="inq-phone" class="field-label">Mobile Number *</label>
+                        <input type="tel" id="inq-phone" class="form-input" placeholder="e.g. +1 800 555 9821" required>
+                    </div>
+                    <div class="field-item">
+                        <label for="inq-business" class="field-label">Business Name *</label>
+                        <input type="text" id="inq-business" class="form-input" placeholder="e.g. Acme Corp" required>
+                    </div>
+                    <div class="field-item full-width">
+                        <label for="inq-comm-method" class="field-label">Preferred Communication *</label>
+                        <select id="inq-comm-method" class="form-input" required>
+                            <option value="">Select a method...</option>
+                            <option value="Email">Email</option>
+                            <option value="Phone Call">Phone Call</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                            <option value="Video Call">Video Call (Zoom/Meet)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field-item full-width">
+                    <label for="inq-description" class="field-label">Project Description *</label>
+                    <textarea id="inq-description" class="form-textarea" rows="4" placeholder="Tell us about your project goals, target audience, must-have features, and any specific requirements..." required></textarea>
+                </div>
+
+                <!-- Auto-populated Estimator Data -->
+                <div class="inquiry-estimator-data">
+                    <h3 class="inquiry-estimator-title"><i data-lucide="calculator" class="icon-left icon-sm"></i> Your Configuration</h3>
+                    <div class="inquiry-estimator-grid">
+                        <div class="inq-est-item"><span class="inq-est-label">Project Type</span><span class="inq-est-value" id="inq-est-type">Landing Page</span></div>
+                        <div class="inq-est-item"><span class="inq-est-label">Pages</span><span class="inq-est-value" id="inq-est-pages">5</span></div>
+                        <div class="inq-est-item"><span class="inq-est-label">Features</span><span class="inq-est-value" id="inq-est-features">None</span></div>
+                        <div class="inq-est-item"><span class="inq-est-label">Timeline</span><span class="inq-est-value" id="inq-est-timeline">4-6 Weeks (Standard)</span></div>
+                        <div class="inq-est-item total"><span class="inq-est-label">Estimated Cost</span><span class="inq-est-value text-gradient font-semibold" id="inq-est-cost">₹4,999 - ₹5,999</span></div>
+                    </div>
+                </div>
+
+                <div class="inquiry-form-actions">
+                    <button type="button" class="btn btn-secondary" id="inq-cancel-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-lg" id="inq-submit-btn">
+                        <i data-lucide="send" class="icon-left"></i> Submit Project Request
+                    </button>
+                </div>
+            </form>
+
+            <!-- Success Overlay -->
+            <div class="inquiry-success" id="inquiry-success">
+                <div class="inquiry-success-icon">
+                    <i data-lucide="check-circle"></i>
+                </div>
+                <h3 class="inquiry-success-title">Thank You!</h3>
+                <p class="inquiry-success-text">Your project request has been submitted successfully. Our team will contact you soon.</p>
+                <button type="button" class="btn btn-primary" id="inq-success-btn">Done</button>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="inquiry-loading" id="inquiry-loading">
+                <div class="inquiry-loading-spinner"></div>
+                <p class="inquiry-loading-text">Submitting your request...</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand-col">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">IB</span>
+                    <span class="logo-text">InfoBeans<span class="text-gradient">.</span></span>
+                </a>
+                <p class="footer-desc">Crafting state-of-the-art websites, E-commerce platforms, local marketing tools, and corporate systems for modern companies globally.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i data-lucide="linkedin"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="twitter"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="github"></i></a>
+                    <a href="#" class="social-icon"><i data-lucide="instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4 class="footer-title">Agency</h4>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="services.html">Our Services</a>
+                    <a href="portfolio.html">Case Studies</a>
+                    <a href="estimator.html">Cost Estimator</a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4 class="footer-title">Services</h4>
+                <div class="footer-links">
+                    <a href="services.html">Business Websites</a>
+                    <a href="services.html">E-Commerce</a>
+                    <a href="services.html">Local SEO Optimization</a>
+                    <a href="services.html">WhatsApp Bots</a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4 class="footer-title">Access</h4>
+                <div class="footer-links">
+                    <a href="admin.html"><i data-lucide="lock" class="icon-left icon-sm"></i> Admin Portal</a>
+                    <a href="careers.html">Careers Section</a>
+                    <a href="mailto:hello@infobeans.com">hello@infobeans.com</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container footer-bottom-container">
+                <p class="copyright-text">&copy; 2026 InfoBeans Private Limited. All rights reserved.</p>
+                <div class="footer-legal-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
